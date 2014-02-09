@@ -24,7 +24,7 @@ setup(
 	author_email = "jan@jakes.pro",
 	url = "https://github.com/visipedia/django-visipedia",
 	license = "BSD",
-	package_dir = {'django_visipedia': 'django_visipedia'},
+	packages = ['django_visipedia'],
 	package_data = {'': ['LICENSE', 'README.md'], 'django_visipedia': ['*.crt']},
 	include_package_data = True,
 	install_requires = INSTALL_REQUIRES,
