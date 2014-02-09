@@ -14,8 +14,13 @@ class VisipediaMiddleware(object):
 		cookie = request.COOKIES.get('visipedia_session', None)
 		if cookie is None:
 			# user is not logged in to Visipedia, log her out
+			# but only if she has the Visipedia account
 			if request.user.is_authenticated():
-				logout(request)
+				try:
+					request.user.visipedia_user
+					logout(request)
+				except VisipediaUser.DoesNotExist:
+					pass
 		else:
 			# somebody is logged in to Visipedia, but not the same user is logged in here
 			if request.user.is_authenticated() and cookie != request.session.get('visipedia_session', None):
