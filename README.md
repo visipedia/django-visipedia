@@ -9,6 +9,11 @@ Currently the repository covers especially the use for internal applications whi
 3. The application provides a possibility to define a confidental API accessible only by the Visipedia server.
 
 ## Installation
+You can install Django Visipedia with [PIP](http://www.pip-installer.org/):
+```bash
+pip install git+git://github.com/visipedia/django-visipedia
+```
+
 If you haven't done so, register your application at https://visipedia.co/settings/developer/ at first.
 
 Add your application ID and secret to your settings:
