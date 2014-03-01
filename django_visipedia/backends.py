@@ -15,7 +15,7 @@ class OAuth2Backend(object):
 
 	def authenticate(self, visipedia_session):
 
-		scope = ','.join(VISIPEDIA_SCOPES)
+		scope = ' '.join(VISIPEDIA_SCOPES)
 		visipedia.get_access_token_from_visipedia_session(visipedia_session, scope=scope)
 
 		# if the user is not found, throws VisipediaException
