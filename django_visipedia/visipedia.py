@@ -62,13 +62,16 @@ class Visipedia(object):
 		self._add_persistent_data(result)
 		return data
 
-	def get_access_token_from_visipedia_session(self, visipedia_session):
+	def get_access_token_from_visipedia_session(self, visipedia_session, scope=None):
 
 		data = {
 			'grant_type': 'password',
 			'username' : 'visipedia',
 			'password' : visipedia_session
 		}
+
+		if scope:
+			data['scope'] = scope
 
 		auth_token = '%s:%s' % (self.client_id, self.client_secret)
 		headers = {'Authorization': 'Basic %s' % base64.b64encode(auth_token)}
