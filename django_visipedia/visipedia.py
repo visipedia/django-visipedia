@@ -16,6 +16,8 @@ class Visipedia(object):
 	authorization_url = '/auth/oauth2/authorize/'
 	access_token_url = '/auth/oauth2/token/'
 	visipedia_signin_url = '/signin/'
+	visipedia_signout_url = '/signout/'
+	visipedia_task_url = '/task/'
 	certificate = os.path.dirname(os.path.abspath(__file__)) + '/visipedia.crt'
 
 	client_id = None
@@ -80,6 +82,9 @@ class Visipedia(object):
 		self._add_persistent_data(result)
 		return result
 
+	def get_visipedia_signout_url(self):
+		return "%s%s" % (self.site, quote(self.visipedia_signout_url))
+
 	def get_visipedia_signin_url(self, redirect_uri=None):
 
 		params = {}
@@ -87,6 +92,9 @@ class Visipedia(object):
 			params['next'] = redirect_uri
 
 		return "%s%s?%s" % (self.site, quote(self.visipedia_signin_url), urlencode(params))
+	
+	def get_visipedia_task_url(self, task_uuid):
+		return "%s%s%s/" % (self.site, quote(self.visipedia_task_url), task_uuid)
 
 	def api(self, method, path, params={}):
 

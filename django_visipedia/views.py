@@ -11,3 +11,11 @@ def login(request):
 		next = request.GET.get('next', '')
 		uri = request.build_absolute_uri('/').rstrip('/') + next
 		return redirect(visipedia.get_visipedia_signin_url(uri))
+
+def logout(request):
+
+	if request.user.is_authenticated():
+		return redirect(visipedia.get_visipedia_signout_url())
+	else:
+		return redirect(visipedia.site)
+		
