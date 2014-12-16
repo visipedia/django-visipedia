@@ -1,7 +1,9 @@
 from django.contrib.auth import get_user_model
-from django_visipedia import visipedia, persistor
+from django_visipedia import init_visipedia, persistor
 from django_visipedia.models import VisipediaUser
 from django_visipedia import VISIPEDIA_SCOPES
+
+visipedia = init_visipedia()
 
 # compatibility for Django < 1.6
 try:

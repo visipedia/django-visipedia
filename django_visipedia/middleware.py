@@ -1,6 +1,8 @@
-from django_visipedia import visipedia, PersistentStorage
+from django_visipedia import init_visipedia, PersistentStorage
 from django_visipedia.models import VisipediaUser
 from django.contrib.auth import authenticate, login, logout
+
+visipedia = init_visipedia()
 
 
 class VisipediaMiddleware(object):
