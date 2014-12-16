@@ -49,9 +49,11 @@ VISIPEDIA_USER_PERSISTOR_SETTINGS = getattr(settings, 'VISIPEDIA_USER_PERSISTOR_
 VISIPEDIA_SCOPES = getattr(settings, 'VISIPEDIA_SCOPES', [])
 
 
-def init_visipedia():
-    return Adapter(VISIPEDIA_APP_ID, VISIPEDIA_APP_SECRET, site=VISIPEDIA_API_SITE)
+visipedia_adapter = Adapter(VISIPEDIA_APP_ID, VISIPEDIA_APP_SECRET, site=VISIPEDIA_API_SITE)
 
+
+def visipedia():
+    return visipedia_adapter
 
 if isinstance(VISIPEDIA_USER_PERSISTOR, six.string_types):
     cls = load_class(VISIPEDIA_USER_PERSISTOR)

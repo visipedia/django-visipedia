@@ -1,8 +1,6 @@
 from django.conf import settings
 from django.shortcuts import redirect
-from django_visipedia import init_visipedia
-
-visipedia = init_visipedia()
+from django_visipedia import visipedia_adapter
 
 
 def login(request):
@@ -11,12 +9,12 @@ def login(request):
     else:
         next_page = request.GET.get('next', '')
         uri = request.build_absolute_uri('/').rstrip('/') + next_page
-        return redirect(visipedia.get_visipedia_signin_url(uri))
+        return redirect(visipedia_adapter.get_visipedia_signin_url(uri))
 
 
 def logout(request):
     if request.user.is_authenticated():
-        return redirect(visipedia.get_visipedia_signout_url())
+        return redirect(visipedia_adapter.get_visipedia_signout_url())
     else:
-        return redirect(visipedia.site)
+        return redirect(visipedia_adapter.site)
 
