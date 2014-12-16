@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.shortcuts import redirect
-from django_visipedia import visipedia
+from django_visipedia import init_visipedia
+
+visipedia = init_visipedia()
 
 
 def login(request):
