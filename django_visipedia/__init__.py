@@ -1,5 +1,5 @@
 from django.conf import settings
-from django_visipedia.adapter import Adapter
+from django_visipedia.client import Client
 
 from importlib import import_module
 from django.core.exceptions import ImproperlyConfigured
@@ -49,11 +49,11 @@ VISIPEDIA_USER_PERSISTOR_SETTINGS = getattr(settings, 'VISIPEDIA_USER_PERSISTOR_
 VISIPEDIA_SCOPES = getattr(settings, 'VISIPEDIA_SCOPES', [])
 
 
-visipedia_adapter = Adapter(VISIPEDIA_APP_ID, VISIPEDIA_APP_SECRET, site=VISIPEDIA_API_SITE)
+client = Client(VISIPEDIA_APP_ID, VISIPEDIA_APP_SECRET, site=VISIPEDIA_API_SITE)
 
 
 def visipedia():
-    return visipedia_adapter
+    return client
 
 if isinstance(VISIPEDIA_USER_PERSISTOR, six.string_types):
     cls = load_class(VISIPEDIA_USER_PERSISTOR)

@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django_visipedia import visipedia_adapter, persistor
+from django_visipedia import client, persistor
 from django_visipedia.models import VisipediaUser
 from django_visipedia import VISIPEDIA_SCOPES
 
@@ -19,11 +19,11 @@ class OAuth2Backend(object):
     def authenticate(visipedia_session):
 
         scope = ' '.join(VISIPEDIA_SCOPES)
-        visipedia_adapter.get_access_token_from_visipedia_session(visipedia_session, scope=scope)
+        client.get_access_token_from_visipedia_session(visipedia_session, scope=scope)
 
         # if the user is not found, throws VisipediaException
         # (no need to catch it since we are in the backend class)
-        me = visipedia_adapter.get('/me/')
+        me = client.get('/me/')
         vid = me['vid']
 
         # try to find the Visipedia user account

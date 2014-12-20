@@ -12,7 +12,7 @@ from django_visipedia.exceptions import VisipediaException
 #  - any point using requests.Session() ?
 
 
-class Adapter(object):
+class Client(object):
     site = 'https://visipedia.org'
     authorization_url = '/auth/oauth2/authorize/'
     access_token_url = '/auth/oauth2/token/'

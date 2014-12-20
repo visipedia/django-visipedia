@@ -1,4 +1,4 @@
-from django_visipedia import visipedia_adapter, PersistentStorage
+from django_visipedia import client, PersistentStorage
 from django_visipedia.models import VisipediaUser
 from django.contrib.auth import authenticate, login, logout
 
@@ -13,7 +13,7 @@ class VisipediaMiddleware(object):
         if request.path.endswith('.jpg'):
             return
 
-        visipedia_adapter.persistent_storage = PersistentStorage(request.session)
+        client.persistent_storage = PersistentStorage(request.session)
 
         cookie = request.COOKIES.get('visipedia_session', None)
         if cookie is None:
