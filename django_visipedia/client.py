@@ -1,15 +1,16 @@
 import base64
 import os
 import requests
+import time
 from requests.compat import json
 from urllib import quote, urlencode
 from django_visipedia.exceptions import VisipediaException
 
 # TODO:
 # - redirect URI (better handling)
-#  - check base64 encoding variant with OAuth2 RFC
-#  - maybe split to Base, Visipedia and InnerApi classes
-#  - any point using requests.Session() ?
+# - check base64 encoding variant with OAuth2 RFC
+# - maybe split to Base, Visipedia and InnerApi classes
+# - any point using requests.Session() ?
 
 
 class Client(object):
@@ -23,6 +24,9 @@ class Client(object):
 
     client_id = None
     client_secret = None
+
+    # seconds before expiration when access token will already be refreshed
+    REFRESH_TOKEN_ADVANCE = 600 # 10 minutes
 
     def __init__(self, client_id, client_secret, site=None, persistent_storage=None):
 
@@ -60,10 +64,10 @@ class Client(object):
         if redirect_uri:
             data['redirect_uri'] = redirect_uri
 
-        data = self._request('POST', '%s' % quote(self.access_token_url), data=data)
-
+        result = self._request('POST', '%s' % quote(self.access_token_url), data=data)
+        result['expires_at'] = time.time() + result['expires_in']
         self._add_persistent_data(result)
-        return data
+        return result
 
     def get_access_token_from_visipedia_session(self, visipedia_session, scope=None):
 
@@ -80,8 +84,26 @@ class Client(object):
         headers = {'Authorization': 'Basic %s' % base64.b64encode(auth_token)}
 
         result = self._request('POST', '%s' % self.access_token_url, headers=headers, data=data)
+        result['expires_at'] = time.time() + result['expires_in']
         self._add_persistent_data(result)
         return result
+
+    def get_access_token_from_refresh_token(self, scope=None):
+        data = {
+            'grant_type': 'refresh_token',
+            'client_id': self.client_id,
+            'client_secret': self.client_secret,
+            'refresh_token': self._get_persistent_data('refresh_token'),
+        }
+
+        if scope:
+            data['scope'] = scope
+
+        result = self._request('POST', '%s' % quote(self.access_token_url), data=data)
+        result['expires_at'] = time.time() + result['expires_in']
+        self._add_persistent_data(result)
+        return result
+
 
     def get_visipedia_signout_url(self):
         return "%s%s" % (self.site, quote(self.visipedia_signout_url))
@@ -98,6 +120,9 @@ class Client(object):
         return "%s%s%s/" % (self.site, quote(self.visipedia_task_url), task_uuid)
 
     def api(self, method, path, params={}):
+
+        if time.time() > self._get_persistent_data('expires_at') - self.REFRESH_TOKEN_ADVANCE:
+            self.get_access_token_from_refresh_token()
 
         headers = {'Authorization': 'Bearer %s' % self._get_persistent_data('access_token')}
 
