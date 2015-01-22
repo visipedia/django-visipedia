@@ -3,7 +3,10 @@ import os
 import requests
 import time
 from requests.compat import json
-from urllib import quote, urlencode
+try:
+    from urllib import quote, urlencode
+except ImportError:
+    from urllib.parse import quote, urlencode
 from django_visipedia.exceptions import VisipediaException
 
 # TODO:
@@ -81,7 +84,7 @@ class Client(object):
             data['scope'] = scope
 
         auth_token = '%s:%s' % (self.client_id, self.client_secret)
-        headers = {'Authorization': 'Basic %s' % base64.b64encode(auth_token)}
+        headers = {'Authorization': 'Basic %s' % base64.b64encode(auth_token.encode('ascii')).decode('ascii')}
 
         result = self._request('POST', '%s' % self.access_token_url, headers=headers, data=data)
         result['expires_at'] = time.time() + result['expires_in']
@@ -158,7 +161,7 @@ class Client(object):
                 data=data,
                 verify=self.certificate
             )
-        except requests.exceptions.RequestException, e:
+        except requests.exceptions.RequestException as e:
             raise VisipediaException(e)
 
         # handle HTTP error codes
