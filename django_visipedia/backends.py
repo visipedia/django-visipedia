@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import AppRegistryNotReady
 from django_visipedia import client, persistor
 from django_visipedia.models import VisipediaUser
 from django_visipedia import VISIPEDIA_SCOPES
-
+from django.conf import settings
 
 # compatibility for Django < 1.6
 try:
@@ -10,7 +11,10 @@ try:
 except ImportError:
     from django.db.transaction import commit_on_success as atomic
 
-User = get_user_model()
+try:
+    User = get_user_model()
+except AppRegistryNotReady:
+    User = settings.AUTH_USER_MODEL
 
 
 class OAuth2Backend(object):

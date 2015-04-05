@@ -1,6 +1,11 @@
 from django.contrib.auth import get_user_model
+from django.conf import settings
+from django.core.exceptions import AppRegistryNotReady
 
-User = get_user_model()
+try:
+    User = get_user_model()
+except AppRegistryNotReady:
+    User = settings.AUTH_USER_MODEL
 
 
 class UserPersistor(object):
