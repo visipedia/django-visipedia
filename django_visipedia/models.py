@@ -1,13 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.conf import settings
-from django.core.exceptions import AppRegistryNotReady
 
 
-try:
-    User = get_user_model()
-except AppRegistryNotReady:
-    User = settings.AUTH_USER_MODEL
+User = get_user_model()
 
 
 class VisipediaUser(models.Model):
