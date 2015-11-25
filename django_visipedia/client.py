@@ -190,3 +190,25 @@ class Client(object):
     def _add_persistent_data(self, data):
         for k, v in data.items():
             self._set_persistent_data(k, v)
+
+class WorkerClient(Client):
+    def __init__(self, *args, **kwargs):
+        super(WorkerClient, self).__init__(*args, **kwargs)
+        self.get_access_token_from_client_credentials()
+
+    def get_access_token_from_client_credentials(self, scope=None):
+
+        data = {
+            'grant_type': 'client_credentials',
+        }
+
+        if scope:
+            data['scope'] = scope
+
+        auth_token = '%s:%s' % (self.client_id, self.client_secret)
+        headers = {'Authorization': 'Basic %s' % base64.b64encode(auth_token.encode('ascii')).decode('ascii')}
+
+        result = self._request('POST', '%s' % self.access_token_url, headers=headers, data=data)
+        result['expires_at'] = time.time() + result['expires_in']
+        self._add_persistent_data(result)
+        return result

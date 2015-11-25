@@ -1,5 +1,5 @@
 from django.conf import settings
-from django_visipedia.client import Client
+from django_visipedia.client import Client, WorkerClient
 
 from importlib import import_module
 from django.core.exceptions import ImproperlyConfigured
@@ -30,7 +30,7 @@ def load_class(path):
 from django_visipedia.persistors import UserPersistor
 
 
-class PersistentStorage():
+class PersistentStorage:
     def __init__(self, session):
         self.session = session
 
@@ -44,13 +44,15 @@ class PersistentStorage():
 VISIPEDIA_APP_ID = getattr(settings, 'VISIPEDIA_APP_ID', None)
 VISIPEDIA_APP_SECRET = getattr(settings, 'VISIPEDIA_APP_SECRET', None)
 VISIPEDIA_API_SITE = getattr(settings, 'VISIPEDIA_API_SITE', 'https://visipedia.org')
+VISIPEDIA_WORKER_APP_ID = getattr(settings, 'VISIPEDIA_WORKER_APP_ID', None)
+VISIPEDIA_WORKER_APP_SECRET = getattr(settings, 'VISIPEDIA_WORKER_APP_SECRET', None)
 VISIPEDIA_USER_PERSISTOR = getattr(settings, 'VISIPEDIA_USER_PERSISTOR', 'django_visipedia.persistors.UserPersistor')
 VISIPEDIA_USER_PERSISTOR_SETTINGS = getattr(settings, 'VISIPEDIA_USER_PERSISTOR_SETTINGS', {})
 VISIPEDIA_SCOPES = getattr(settings, 'VISIPEDIA_SCOPES', [])
 
 
 client = Client(VISIPEDIA_APP_ID, VISIPEDIA_APP_SECRET, site=VISIPEDIA_API_SITE)
-
+worker_client = WorkerClient(VISIPEDIA_WORKER_APP_ID, VISIPEDIA_WORKER_APP_SECRET, site=VISIPEDIA_API_SITE)
 
 def visipedia():
     return client
