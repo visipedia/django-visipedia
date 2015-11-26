@@ -195,7 +195,6 @@ class WorkerClient(Client):
     def __init__(self, *args, **kwargs):
         super(WorkerClient, self).__init__(*args, **kwargs)
         self.data = {}
-        self.get_access_token_from_client_credentials()
 
     def get_access_token_from_client_credentials(self, scope=None):
 
@@ -217,6 +216,7 @@ class WorkerClient(Client):
         return result
 
     def api(self, method, path, params={}):
+        self.get_access_token_from_client_credentials()
 
         headers = {'Authorization': 'Bearer %s' % self.data['access_token']}
 
