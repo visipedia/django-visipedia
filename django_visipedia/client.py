@@ -194,12 +194,15 @@ class Client(object):
 class WorkerClient(Client):
     def __init__(self, *args, **kwargs):
         super(WorkerClient, self).__init__(*args, **kwargs)
+        self.data = {}
         self.get_access_token_from_client_credentials()
 
     def get_access_token_from_client_credentials(self, scope=None):
 
         data = {
             'grant_type': 'client_credentials',
+            'client_id': self.client_id,
+            'client_secret': self.client_secret
         }
 
         if scope:
@@ -210,5 +213,19 @@ class WorkerClient(Client):
 
         result = self._request('POST', '%s' % self.access_token_url, headers=headers, data=data)
         result['expires_at'] = time.time() + result['expires_in']
-        self._add_persistent_data(result)
+        self.data = result
         return result
+
+    def api(self, method, path, params={}):
+
+        headers = {'Authorization': 'Bearer %s' % self.data['access_token']}
+
+        path = '/api%s' % path
+        if method == 'GET':
+            return self._request('GET', path, headers, params)
+        else:
+            try:
+                data = json.dumps(data)
+            except Exception:
+                raise VisipediaException('Invalid request format')
+            return self._request(method, path, headers, data=data)
