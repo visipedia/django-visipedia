@@ -22,7 +22,7 @@ setup(
     url="https://github.com/visipedia/django-visipedia",
     license="MIT",
     packages=['django_visipedia'],
-    package_data={'': ['LICENSE', 'README.md'], 'django_visipedia': ['*.pem']},
+    package_data={'': ['LICENSE', 'README.md'], 'django_visipedia': ['*.crt']},
     include_package_data=True,
     install_requires=INSTALL_REQUIRES,
 )

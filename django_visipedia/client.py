@@ -23,7 +23,7 @@ class Client(object):
     visipedia_signin_url = '/signin/'
     visipedia_signout_url = '/signout/'
     visipedia_task_url = '/task/'
-    certificate = os.path.dirname(os.path.abspath(__file__)) + '/visipedia.pem'
+    certificate = os.path.dirname(os.path.abspath(__file__)) + '/visipedia.crt'
 
     client_id = None
     client_secret = None
